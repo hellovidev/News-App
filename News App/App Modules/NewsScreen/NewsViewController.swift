@@ -26,6 +26,12 @@ class NewsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.refreshControl = UIRefreshControl()
+        refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl?.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        //tableView.addSubview(refreshControl!) // not required when using UITableViewController
+        tableView.refreshControl = refreshControl
+        
         //tableView.register(NewsTableViewCell.self, forCellReuseIdentifier: Cell.news.rawValue)
         tableView.register(UINib(nibName: Nib.newsCell.rawValue, bundle: nil), forCellReuseIdentifier: Cell.news.rawValue)
         tableView.rowHeight = UITableView.automaticDimension
@@ -41,6 +47,15 @@ class NewsViewController: UITableViewController {
         activityView.startAnimating()
 
         newsPresenter?.fetchNews(for: pageNumber)
+    }
+    
+
+
+    @objc func refresh(_ sender: AnyObject) {
+        pageNumber = 1
+//        self.refreshControl?.endRefreshing()
+        newsPresenter?.fetchNews(for: pageNumber)
+       // Code to refresh table view
     }
     
     // MARK: - Table Delegate Methods
@@ -141,7 +156,9 @@ extension NewsViewController: PresenterToViewNewsProtocol {
     func onFetchNewsResponseSuccess(for news: [NewEntity]) {
         states += [Bool](repeating: true, count: news.count)
         self.news += news
+        
         DispatchQueue.main.async {
+            self.refreshControl?.endRefreshing()
             self.tableView.reloadData()
         }
     }
