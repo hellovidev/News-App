@@ -7,7 +7,8 @@
 
 import UIKit
 
-// MARK: - Feed Router
+// MARK: - PresenterToRouterNewsProtocol
+
 class NewsRouter: PresenterToRouterNewsProtocol {
 
     static var mainstoryboard: UIStoryboard {
@@ -16,7 +17,6 @@ class NewsRouter: PresenterToRouterNewsProtocol {
     
     static func createModule() -> NewsViewController {
         
-        // VIPER Architecture Elements Creation
         let view = NewsRouter.mainstoryboard.instantiateViewController(identifier: Controller.news.rawValue) as! NewsViewController
         var presenter: ViewToPresenterNewsProtocol & InteractorToPresenterNewsProtocol = NewsPresenter()
         var interactor: PresenterToInteractorNewsProtocol = NewsInteractor()

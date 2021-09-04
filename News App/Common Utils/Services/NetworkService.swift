@@ -79,7 +79,7 @@ class NetworkService {
                 completion(.failure(NetworkError.noData))
                 return
             }
-            
+            print(String(data: data, encoding: .utf8))
             let result = self.handleNetworkResponse(response)
             
             switch result {
@@ -121,3 +121,5 @@ class NetworkService {
     }
     
 }
+
+
