@@ -8,10 +8,11 @@
 import UIKit
 import ExpandableLabel
 
-class NewsViewController: UITableViewController {
+class NewsViewController: UITableViewController, UISearchBarDelegate {
 
     var newsPresenter: ViewToPresenterNewsProtocol?
     
+    @IBOutlet weak var searchBar: UISearchBar!
     private var news = [NewEntity]()
     private var states = [Bool]()
     private var pageNumber = 1
@@ -22,6 +23,22 @@ class NewsViewController: UITableViewController {
         title = "Hot news"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+            searchBar.showsCancelButton = false
+            searchBar.text = ""
+            searchBar.resignFirstResponder()
+    }
+    
+//    func updateSearchResults(for searchController: UISearchController) {
+//        if let searchText = searchController.searchBar.text {
+//            filteredData = searchText.isEmpty ? data : data.filter({(dataString: String) -> Bool in
+//                return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+//            })
+//
+//            tableView.reloadData()
+//        }
+//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +63,8 @@ class NewsViewController: UITableViewController {
         tableView.tableFooterView = activityView
         activityView.startAnimating()
 
+        
+        searchBar.delegate = self
         newsPresenter?.fetchNews(for: pageNumber)
     }
     
@@ -105,6 +124,21 @@ class NewsViewController: UITableViewController {
                 newsPresenter?.fetchNews(for: pageNumber)
             }
         }
+    }
+    
+    // This method updates filteredData based on the text in the Search Box
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // When there is no text, filteredData is the same as the original data
+        // When user has entered text into the search box
+        // Use the filter method to iterate over all items in the data array
+        // For each item, return true if the item should be included and false if the
+        // item should NOT be included
+        news = searchText.isEmpty ? news : news.filter { (item: NewEntity) -> Bool in
+            // If dataItem matches the searchText, return true to include it
+            return item.title.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+        }
+        
+        tableView.reloadData()
     }
     
 }
@@ -191,9 +225,6 @@ Requirements:
  
 When application runs, user should see screen with news for last 24 hours only. When user reaches the end of current news list, then next news page for previous day should be downloaded and added to the bottom etc. till list contains 7-days news. In this case pagination should be disabled.
 
-User should be able to refresh news list by pull-to-refresh. Days counter should be also reseted.
-
-Also search bar should be added at top of main screen. It should allow user to filter currently downloaded news by news title.
 
 Bonus points for:
 - a nice and interesting UI, animations;
