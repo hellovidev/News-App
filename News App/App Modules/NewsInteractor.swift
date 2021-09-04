@@ -12,8 +12,7 @@ class NewsInteractor: PresenterToInteractorNewsProtocol {
     var presenter: InteractorToPresenterNewsProtocol?
     private let networkService: NetworkService = .init()
     
-    func fetchNewsFromServer() {
-        
+    func fetchNews() {
         networkService.getTopHeadlinesNews { result in
             switch result {
             case .success(let news):
@@ -21,6 +20,18 @@ class NewsInteractor: PresenterToInteractorNewsProtocol {
             case .failure(let error):
                 self.presenter?.fetchNewsRequestFailed(error)
             }
+        }
+    }
+    
+    func fetchImageData(endpoint: String) {
+        networkService.loadImageByURL(endpoint: endpoint) { result in
+            switch result {
+            case .success(let data):
+                self.presenter?.fetchImageDataRequestSuccess(for: data)
+            case .failure(let error):
+                self.presenter?.fetchImageDataRequestFailed(error)
+            }
+            
         }
     }
     

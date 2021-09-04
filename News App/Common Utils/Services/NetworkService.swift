@@ -8,7 +8,8 @@
 import Foundation
 
 class NetworkService {
-    
+    //GET https://newsapi.org/v2/everything?q=Apple&from=2021-09-04&sortBy=popularity&apiKey=API_KEY
+
     private var task: URLSessionTask?
     
     func request<Serializer: Deserializer>(
@@ -106,6 +107,17 @@ class NetworkService {
         default:
             return .failure(NetworkError.failed)
         }
+    }
+    
+    func loadImageByURL(endpoint: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        guard let url = URL(string: endpoint) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+        
+        let urlRequest = URLRequest(url: url)
+        
+        request(request: urlRequest, completion: completion)
     }
     
 }

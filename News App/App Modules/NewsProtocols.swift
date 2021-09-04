@@ -23,7 +23,7 @@ protocol ViewToPresenterNewsProtocol {
     var view: PresenterToViewNewsProtocol? { get set }
     var interactor: PresenterToInteractorNewsProtocol? { get set }
     var router: PresenterToRouterNewsProtocol? { get set }
-    func fetchNewsFromServer()
+    func fetchNews()
     func showNewDetailsController(for selected: NewEntity, navigationConroller: UINavigationController)
 }
 
@@ -43,7 +43,7 @@ protocol PresenterToRouterNewsProtocol {
 // MARK: - Presenter To Interactor Protocol
 protocol PresenterToInteractorNewsProtocol {
     var presenter: InteractorToPresenterNewsProtocol? { get set }
-    func fetchNewsFromServer()
+    func fetchNews()
 }
 
 // MARK: - Interactor To Presenter Protocol

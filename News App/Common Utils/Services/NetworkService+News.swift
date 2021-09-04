@@ -8,10 +8,19 @@
 import Foundation
 
 extension NetworkService {
-    
+
     func getTopHeadlinesNews(completion: @escaping (Result<[NewEntity], Error>) -> Void) {
+        guard let lastWeekDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date()) else {
+            fatalError("Invalid Date")
+        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let lastWeekDateString = dateFormatter.string(from: lastWeekDate)
+        
         let parameters = [
-            "category": "technology"
+            "category": "technology",
+            "country": "us",
+            "from": lastWeekDateString
         ]
         
         request(parameters: parameters, path: .topHeadlines, method: .GET, parser: ModelDeserializer<ArrayArticle>()) { result in
