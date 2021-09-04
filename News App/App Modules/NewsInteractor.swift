@@ -23,16 +23,16 @@ class NewsInteractor: PresenterToInteractorNewsProtocol {
         }
     }
     
-    func fetchImageData(endpoint: String) {
-        networkService.loadImageByURL(endpoint: endpoint) { result in
-            switch result {
-            case .success(let data):
-                self.presenter?.fetchImageDataRequestSuccess(for: data)
-            case .failure(let error):
-                self.presenter?.fetchImageDataRequestFailed(error)
-            }
-            
-        }
-    }
-    
+//    func fetchImageData(endpoint: String) {
+//        networkService.loadImageByURL(endpoint: endpoint) { result in
+//            switch result {
+//            case .success(let data):
+//                self.presenter?.fetchImageDataRequestSuccess(for: data)
+//            case .failure(let error):
+//                self.presenter?.fetchImageDataRequestFailed(error)
+//            }
+//            
+//        }
+//    }
+//    
 }
