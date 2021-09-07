@@ -7,8 +7,10 @@
 
 import Foundation
 
+// News API (e.g. https://newsapi.org)
 class NetworkService {
     
+
     private var task: URLSessionTask?
     
     func request<Serializer: Deserializer>(
@@ -78,7 +80,7 @@ class NetworkService {
                 completion(.failure(NetworkError.noData))
                 return
             }
-            
+            print(String(data: data, encoding: .utf8))
             let result = self.handleNetworkResponse(response)
             
             switch result {
@@ -108,4 +110,17 @@ class NetworkService {
         }
     }
     
+    func loadImageByURL(endpoint: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        guard let url = URL(string: endpoint) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+        
+        let urlRequest = URLRequest(url: url)
+        
+        request(request: urlRequest, completion: completion)
+    }
+    
 }
+
+

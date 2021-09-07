@@ -7,14 +7,16 @@
 
 import Foundation
 
-// MARK: - News Interactor
+// MARK: - PresenterToInteractorNewsProtocol
+
 class NewsInteractor: PresenterToInteractorNewsProtocol {
-    var presenter: InteractorToPresenterNewsProtocol?
+    
     private let networkService: NetworkService = .init()
     
-    func fetchNewsFromServer() {
-        
-        networkService.getTopHeadlinesNews { result in
+    var presenter: InteractorToPresenterNewsProtocol?
+    
+    func fetchNews(for day: Int) {
+        networkService.getTopHeadlinesNews(for: day) { result in
             switch result {
             case .success(let news):
                 self.presenter?.fetchNewsRequestSuccess(for: news)

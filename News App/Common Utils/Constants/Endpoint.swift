@@ -11,6 +11,7 @@ enum Endpoint: String {
     case baseURL = "https://newsapi.org/v2/"
     
     enum Path: String {
+        case everything = "everything"
         case topHeadlines = "top-headlines"
     }
 }

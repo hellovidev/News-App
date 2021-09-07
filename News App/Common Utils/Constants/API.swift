@@ -7,4 +7,4 @@
 
 import Foundation
 
-let API_KEY = "505ae8aa1212428492c5cc29dc25c669"
+let API_KEY = "API_KEY"

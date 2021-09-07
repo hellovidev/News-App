@@ -1,0 +1,16 @@
+PODS:
+  - ExpandableLabel (0.5.2)
+
+DEPENDENCIES:
+  - ExpandableLabel
+
+SPEC REPOS:
+  trunk:
+    - ExpandableLabel
+
+SPEC CHECKSUMS:
+  ExpandableLabel: c2fab6d27860c572d67134b30522a5917746171d
+
+PODFILE CHECKSUM: e48b6f501c4939d002d7d0308e4784c388b2353e
+
+COCOAPODS: 1.11.0
