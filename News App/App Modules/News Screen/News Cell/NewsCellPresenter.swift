@@ -21,6 +21,10 @@ class NewsCellPresenter: ViewToPresenterNewsCellProtocol {
         interactor?.fetchImageData(endpoint: endpoint)
     }
     
+    func showWebPreview(indexPath: IndexPath, delegate: CellNavigationDelegate) {
+        router?.showWebPreview(indexPath: indexPath, delegate: delegate)
+    }
+    
 }
 
 // MARK: - InteractorToPresenterNewsCellProtocol

@@ -26,7 +26,8 @@ protocol ViewToPresenterNewsProtocol {
     var interactor: PresenterToInteractorNewsProtocol? { get set }
     var router: PresenterToRouterNewsProtocol? { get set }
     func fetchNews(for day: Int)
-    func showNewDetailsController(for selected: NewEntity, navigationConroller: UINavigationController)
+    func openArticle(url: String, from: UIViewController, navigationController: UINavigationController)
+    func closeArticle(navigationController: UINavigationController)
 }
 
 // MARK: - Presenter To View Protocol
@@ -41,7 +42,8 @@ protocol PresenterToViewNewsProtocol {
 protocol PresenterToRouterNewsProtocol {
     static func createModule() -> NewsViewController
     static var mainstoryboard: UIStoryboard { get }
-    func pushToNewDetailsScreen(for selected: NewEntity, navigationConroller: UINavigationController)
+    func openArticle(url: String, from: UIViewController, navigationController: UINavigationController)
+    func closeArticle(navigationController: UINavigationController)
 }
 
 // MARK: - Presenter To Interactor Protocol

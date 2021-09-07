@@ -7,7 +7,8 @@
 
 import Foundation
 
-// MARK: - News Interactor
+// MARK: - PresenterToInteractorNewsProtocol
+
 class NewsInteractor: PresenterToInteractorNewsProtocol {
     
     private let networkService: NetworkService = .init()

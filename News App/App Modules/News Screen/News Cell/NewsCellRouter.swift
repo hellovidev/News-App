@@ -11,7 +11,9 @@ import UIKit
 
 class NewsCellRouter: PresenterToRouterNewsCellProtocol {
     
-    static func createModule(tableView: UITableView, indexPath: IndexPath) -> NewsTableViewCell {
+    
+    static func createModule(tableView: UITableView, indexPath: IndexPath, article: NewEntity) -> NewsTableViewCell {
+        //self.indexPath = indexPath
         
         let view = tableView.dequeueReusableCell(withIdentifier: Cell.news.rawValue, for: indexPath) as! NewsTableViewCell
         var presenter: ViewToPresenterNewsCellProtocol & InteractorToPresenterNewsCellProtocol = NewsCellPresenter()
@@ -20,6 +22,9 @@ class NewsCellRouter: PresenterToRouterNewsCellProtocol {
         
         // Module Initialization
         view.newsCellPresenter = presenter
+        view.indexPath = indexPath
+        view.configure(with: article)
+        
         presenter.view = view
         presenter.router = router
         presenter.interactor = interactor
@@ -28,4 +33,13 @@ class NewsCellRouter: PresenterToRouterNewsCellProtocol {
         return view
     }
     
+    func showWebPreview(indexPath: IndexPath, delegate: CellNavigationDelegate) {
+        delegate.redirect(indexPath: indexPath)
+    }
+    
+}
+
+
+protocol CellNavigationDelegate: AnyObject {
+    func redirect(indexPath: IndexPath)
 }

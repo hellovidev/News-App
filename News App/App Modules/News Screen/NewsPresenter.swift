@@ -20,9 +20,13 @@ class NewsPresenter: ViewToPresenterNewsProtocol {
     func fetchNews(for day: Int) {
         interactor?.fetchNews(for: day)
     }
-
-    func showNewDetailsController(for selected: NewEntity, navigationConroller: UINavigationController) {
-        router?.pushToNewDetailsScreen(for: selected, navigationConroller: navigationConroller)
+    
+    func openArticle(url: String, from: UIViewController, navigationController: UINavigationController) {
+        router?.openArticle(url: url, from: from, navigationController: navigationController)
+    }
+    
+    func closeArticle(navigationController: UINavigationController) {
+        router?.closeArticle(navigationController: navigationController)
     }
     
 }

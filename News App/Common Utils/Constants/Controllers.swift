@@ -9,4 +9,5 @@ import Foundation
 
 enum Controller: String {
     case news = "NewsController"
+    case webView = "WebViewController"
 }
