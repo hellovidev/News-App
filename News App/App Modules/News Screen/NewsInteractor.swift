@@ -14,7 +14,7 @@ class NewsInteractor: PresenterToInteractorNewsProtocol {
     private let networkService: NetworkService = .init()
     
     var presenter: InteractorToPresenterNewsProtocol?
-        
+    
     func fetchNews(for day: Int) {
         networkService.getTopHeadlinesNews(for: day) { result in
             switch result {

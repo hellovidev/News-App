@@ -68,14 +68,14 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="O7s-Vh-HGo">
-                                <rect key="frame" x="369" y="827" width="20" height="20"/>
+                                <rect key="frame" x="374" y="822" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="fTA-Po-w5R"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="fTA-Po-w5R" firstAttribute="bottom" secondItem="O7s-Vh-HGo" secondAttribute="bottom" constant="15" id="AtG-X9-R3m"/>
-                            <constraint firstItem="fTA-Po-w5R" firstAttribute="trailing" secondItem="O7s-Vh-HGo" secondAttribute="trailing" constant="25" id="LWd-jZ-15e"/>
+                            <constraint firstItem="fTA-Po-w5R" firstAttribute="bottom" secondItem="O7s-Vh-HGo" secondAttribute="bottom" constant="20" id="AtG-X9-R3m"/>
+                            <constraint firstItem="fTA-Po-w5R" firstAttribute="trailing" secondItem="O7s-Vh-HGo" secondAttribute="trailing" constant="20" id="LWd-jZ-15e"/>
                             <constraint firstAttribute="bottom" secondItem="oDZ-Lb-U01" secondAttribute="bottom" id="S4O-ew-mWp"/>
                             <constraint firstItem="oDZ-Lb-U01" firstAttribute="top" secondItem="fTA-Po-w5R" secondAttribute="top" id="p6H-TM-6lA"/>
                             <constraint firstItem="oDZ-Lb-U01" firstAttribute="trailing" secondItem="fTA-Po-w5R" secondAttribute="trailing" id="sOt-Q7-wrw"/>

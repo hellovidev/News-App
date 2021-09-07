@@ -26,5 +26,5 @@ struct NewEntity: NewEntityProtocol, Decodable {
     enum CodingKeys: CodingKey {
         case author, title, description, url, urlToImage, publishedAt
     }
-
+    
 }

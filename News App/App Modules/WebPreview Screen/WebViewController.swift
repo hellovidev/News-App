@@ -31,7 +31,7 @@ class WebViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     private var endpoint: String?
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -42,7 +42,7 @@ class WebViewController: UIViewController {
         super.viewDidLoad()
         
         webView.navigationDelegate = self
-
+        
         guard let endpoint = endpoint else {
             webViewPresenter?.closeWithError(WebViewError.message("Empty URL path."), delegate: delegate!)
             return
@@ -67,7 +67,7 @@ class WebViewController: UIViewController {
     deinit {
         print("\(type(of: self)) deinit.")
     }
-
+    
 }
 
 // MARK: - Tracking Loading Status

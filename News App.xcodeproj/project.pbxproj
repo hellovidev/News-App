@@ -229,9 +229,9 @@
 			children = (
 				5FA9B2E526E3D2290060DAE8 /* NewsCellProtocols.swift */,
 				5F30EF5526E35FD5005394A9 /* NewsTableViewCell.swift */,
-				5FA9B2E726E3D2F80060DAE8 /* NewsCellRouter.swift */,
 				5FA9B2E926E3D3060060DAE8 /* NewsCellPresenter.swift */,
 				5FA9B2EB26E3D3170060DAE8 /* NewsCellInteractor.swift */,
+				5FA9B2E726E3D2F80060DAE8 /* NewsCellRouter.swift */,
 			);
 			path = "News Cell";
 			sourceTree = "<group>";

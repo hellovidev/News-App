@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 extension NetworkService {
 
@@ -38,6 +39,17 @@ extension NetworkService {
     
     private struct ArrayArticle: Decodable {
         let articles: [NewEntity]
+    }
+    
+    func imageRequest(for url: String) -> AnyPublisher<Data?, Never> {
+        return Just(url)
+            .flatMap(
+                { poster -> AnyPublisher<Data?, Never> in
+                    guard let url = URL(string: url) else { fatalError() }
+                    return ImageLoader.shared.loadImage(from: url)
+                }
+            )
+            .eraseToAnyPublisher()
     }
     
 }

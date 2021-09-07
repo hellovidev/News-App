@@ -34,7 +34,7 @@ extension NewsCellPresenter: InteractorToPresenterNewsCellProtocol {
     func fetchImageDataRequestSuccess(for imageData: Data) {
         view?.onFetchImageDataResponseSuccess(for: imageData)
     }
-
+    
     func fetchImageDataRequestFailed(_ error: Error) {
         view?.onFetchImageDataResponseFailed(error)
     }

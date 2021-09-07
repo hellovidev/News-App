@@ -6,25 +6,26 @@
 //
 
 import Foundation
+import Combine
 
 // MARK: - PresenterToInteractorNewsCellProtocol
 
 class NewsCellInteractor: PresenterToInteractorNewsCellProtocol {
     
     private let networkService: NetworkService = .init()
-
+    private var cancellable: AnyCancellable?
+    
     var presenter: InteractorToPresenterNewsCellProtocol?
     
     func fetchImageData(endpoint: String) {
-        networkService.loadImageByURL(endpoint: endpoint) { result in
-            switch result {
-            case .success(let data):
+        cancellable = networkService.imageRequest(for: endpoint).sink { [unowned self] data in
+            switch data {
+            case .none:
+                self.presenter?.fetchImageDataRequestFailed(NetworkError.noData)
+            case .some(let data):
                 self.presenter?.fetchImageDataRequestSuccess(for: data)
-            case .failure(let error):
-                self.presenter?.fetchImageDataRequestFailed(error)
             }
-
         }
     }
-
+    
 }

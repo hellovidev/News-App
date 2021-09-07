@@ -22,16 +22,16 @@ public final class ImageLoader {
         self.cache = cache
     }
 
-    public func loadImage(from url: URL) -> AnyPublisher<UIImage?, Never> {
+    public func loadImage(from url: URL) -> AnyPublisher<Data?, Never> {
         if let image = cache[url] {
-            return Just(image).eraseToAnyPublisher()
+            return Just(image.pngData()).eraseToAnyPublisher()
         }
         return URLSession.shared.dataTaskPublisher(for: url)
-            .map { (data, response) -> UIImage? in return UIImage(data: data) }
+            .map { (data, response) -> Data? in return data }
             .catch { error in return Just(nil) }
-            .handleEvents(receiveOutput: {[unowned self] image in
-                guard let image = image else { return }
-                self.cache[url] = image
+            .handleEvents(receiveOutput: {[unowned self] data in
+                guard let data = data else { return }
+                self.cache[url] = UIImage(data: data)
             })
             .print("Image loading \(url):")
             .subscribe(on: backgroundQueue)

@@ -27,7 +27,7 @@ protocol PresenterToViewNewsCellProtocol {
 // MARK: - Presenter To Router Protocol
 
 protocol PresenterToRouterNewsCellProtocol {
-    static func createModule(tableView: UITableView, indexPath: IndexPath, article: NewEntity) -> NewsTableViewCell
+    static func createModule(tableView: UITableView, indexPath: IndexPath, article: Article) -> NewsTableViewCell
     func showWebPreview(indexPath: IndexPath, delegate: CellNavigationDelegate)
 }
 
@@ -43,4 +43,10 @@ protocol PresenterToInteractorNewsCellProtocol {
 protocol InteractorToPresenterNewsCellProtocol {
     func fetchImageDataRequestSuccess(for imageData: Data)
     func fetchImageDataRequestFailed(_ error: Error)
+}
+
+// MARK: - Action Delegate Manager
+
+protocol CellNavigationDelegate: AnyObject {
+    func redirect(indexPath: IndexPath)
 }

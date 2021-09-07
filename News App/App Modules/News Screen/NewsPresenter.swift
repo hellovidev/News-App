@@ -34,7 +34,7 @@ class NewsPresenter: ViewToPresenterNewsProtocol {
 // MARK: - InteractorToPresenterNewsProtocol
 
 extension NewsPresenter: InteractorToPresenterNewsProtocol {
-
+    
     func fetchNewsRequestSuccess(for news: [NewEntity]) {
         view?.onFetchNewsResponseSuccess(for: news)
     }

@@ -7,8 +7,9 @@
 
 import Foundation
 
+// News API (e.g. https://newsapi.org)
 class NetworkService {
-    //GET https://newsapi.org/v2/everything?q=Apple&from=2021-09-04&sortBy=popularity&apiKey=API_KEY
+    
 
     private var task: URLSessionTask?
     

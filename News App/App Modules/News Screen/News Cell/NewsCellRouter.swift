@@ -11,9 +11,7 @@ import UIKit
 
 class NewsCellRouter: PresenterToRouterNewsCellProtocol {
     
-    
-    static func createModule(tableView: UITableView, indexPath: IndexPath, article: NewEntity) -> NewsTableViewCell {
-        //self.indexPath = indexPath
+    static func createModule(tableView: UITableView, indexPath: IndexPath, article: Article) -> NewsTableViewCell {
         
         let view = tableView.dequeueReusableCell(withIdentifier: Cell.news.rawValue, for: indexPath) as! NewsTableViewCell
         var presenter: ViewToPresenterNewsCellProtocol & InteractorToPresenterNewsCellProtocol = NewsCellPresenter()
@@ -22,13 +20,13 @@ class NewsCellRouter: PresenterToRouterNewsCellProtocol {
         
         // Module Initialization
         view.newsCellPresenter = presenter
-        view.indexPath = indexPath
-        view.configure(with: article)
-        
         presenter.view = view
         presenter.router = router
         presenter.interactor = interactor
         interactor.presenter = presenter
+        
+        view.indexPath = indexPath
+        view.configure(with: article)
         
         return view
     }
@@ -37,9 +35,4 @@ class NewsCellRouter: PresenterToRouterNewsCellProtocol {
         delegate.redirect(indexPath: indexPath)
     }
     
-}
-
-
-protocol CellNavigationDelegate: AnyObject {
-    func redirect(indexPath: IndexPath)
 }

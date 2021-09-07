@@ -7,35 +7,26 @@
 
 import UIKit
 import ExpandableLabel
-import  Combine
+import Combine
 
 class NewsTableViewCell: UITableViewCell {
     
     var newsCellPresenter: ViewToPresenterNewsCellProtocol?
     
-    private let networkService: NetworkService = .init()
-
     @IBOutlet weak var imagePreview: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: ExpandableLabel!
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var dateContainer: UIView!
     
     weak var delegate: CellNavigationDelegate?
-    
     var indexPath: IndexPath?
+    
+    private var animator: UIViewPropertyAnimator?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        descriptionLabel.numberOfLines = 3
-        descriptionLabel.collapsed = true
-        descriptionLabel.collapsedAttributedLink = NSAttributedString(string: "Show More", attributes: [NSAttributedString.Key.foregroundColor: UIColor.blue])
-    }
-
-    @IBAction func redirect(_ sender: UIButton) {
-
-        newsCellPresenter?.showWebPreview(indexPath: indexPath!, delegate: delegate!)
-
-        //performSegue(withIdentifier: "RedirectWebPreview", sender: self)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -43,43 +34,56 @@ class NewsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-//    override func prepareForReuse() {
-//        super.prepareForReuse()
-//        imagePreview.image = UIImage(named: "ImagePlaceholder")
-//        imagePreview.layer.cornerRadius = 25
-//        imagePreview.layer.borderWidth = 2
-//        imagePreview.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
-//        titleLabel.text = "No title"
-//        descriptionLabel.text = "No description"
-//        descriptionLabel.numberOfLines = 3
-//        descriptionLabel.collapsed = true
-//        descriptionLabel.collapsedAttributedLink = NSAttributedString(string: "Show more", attributes: [NSAttributedString.Key.foregroundColor: UIColor.blue])
-//
-//        imagePreview.image = nil
-//        imagePreview.alpha = 0.0
-//        animator?.stopAnimation(true)
-//        cancellable?.cancel()
-//    }
-    
-//    func loadImage(url: String) {
-//        newsCellPresenter?.fetchImageData(endpoint: url)
-//    }
-    
-    
-    
-    private var cancellable: AnyCancellable?
-    private var animator: UIViewPropertyAnimator?
-
-
-    public func configure(with article: NewEntity) {
-        titleLabel.text = article.title
-        descriptionLabel.text = article.description
-        cancellable = loadImage(for: article).sink { [unowned self] image in self.showImage(image: (image ?? UIImage(named: "ImagePlaceholder"))!) }
+    @IBAction func redirect(_ sender: UIButton) {
+        guard let indexPath = indexPath, let delegate = delegate else { return }
+        newsCellPresenter?.showWebPreview(indexPath: indexPath, delegate: delegate)
     }
-
-    private func showImage(image: UIImage) {
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLabel.text = "No title"
+        
+        imagePreview.image = UIImage(named: "ImagePlaceholder")
         imagePreview.alpha = 0.0
-//        animator?.stopAnimation(false)
+        animator?.stopAnimation(true)
+        
+        
+        descriptionLabel.text = "No description"
+        descriptionLabel.numberOfLines = 3
+        descriptionLabel.collapsed = true
+        descriptionLabel.collapsedAttributedLink = NSAttributedString(string: "Show More", attributes: [NSAttributedString.Key.foregroundColor: UIColor.blue])
+    }
+    
+    func configure(with article: Article) {
+        titleLabel.text = article.object.title
+        
+        descriptionLabel.numberOfLines = 3
+        descriptionLabel.collapsed = true
+        descriptionLabel.collapsedAttributedLink = NSAttributedString(string: "Show More", attributes: [NSAttributedString.Key.foregroundColor: UIColor.blue])
+        descriptionLabel.collapsed = article.state
+        descriptionLabel.text = article.object.description
+        
+        dateLabel.text = formatteData(article.object.publishedAt)
+        dateContainer.layer.cornerRadius = 10
+        
+        newsCellPresenter?.fetchImageData(endpoint: article.object.urlToImage ?? "")
+    }
+    
+    private func formatteData(_ value: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        
+        let date = dateFormatter.date(from: value)
+        dateFormatter.dateFormat = "dd MMM yyyy"
+        
+        guard let date = date else { return "No date" }
+        let result = dateFormatter.string(from: date)
+        return result
+    }
+    
+    private func showImage(imageData: Data) {
+        imagePreview.alpha = 0.0
         animator?.fractionComplete = 0.25
         animator?.stopAnimation(true)
         animator?.finishAnimation(at: .current)
@@ -104,22 +108,10 @@ class NewsTableViewCell: UITableViewCell {
         gradient.frame = imagePreview.bounds
         imagePreview.layer.mask = gradient
         
-        imagePreview.image = image
+        imagePreview.image = UIImage(data: imageData)
         animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.3, delay: 0, options: .curveLinear, animations: {
             self.imagePreview.alpha = 1.0
         })
-    }
-
-    private func loadImage(for article: NewEntity) -> AnyPublisher<UIImage?, Never> {
-        return Just(article.urlToImage)
-            .flatMap(
-                { poster -> AnyPublisher<UIImage?, Never> in
-                    guard let endpoint = article.urlToImage else { abort() }
-                    guard let url = URL(string: endpoint) else { abort() }
-                    return ImageLoader.shared.loadImage(from: url)
-                }
-            )
-            .eraseToAnyPublisher()
     }
     
 }
@@ -130,10 +122,7 @@ extension NewsTableViewCell: PresenterToViewNewsCellProtocol {
     
     func onFetchImageDataResponseSuccess(for imageData: Data) {
         DispatchQueue.main.async {
-            self.imagePreview.image = UIImage(data: imageData)
-            self.imagePreview.layer.cornerRadius = 25
-            self.imagePreview.layer.borderWidth = 2
-            self.imagePreview.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+            self.showImage(imageData: imageData)
         }
     }
     

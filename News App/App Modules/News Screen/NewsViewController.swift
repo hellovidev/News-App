@@ -25,44 +25,21 @@ class NewsViewController: UITableViewController {
     
     private let activityView = UIActivityIndicatorView(style: .medium)
 
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         title = "News feed"
-        //let titleAttributes = [ NSFontAttributeName: UIFont(name: "Chalkduster", size: 18.0)! ]
-    
-        //title = NSAttributedString(string: "News feed", attributes: titleAttributes)
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupRefreshControl()
 
-        
         tableView.register(UINib(nibName: Nib.newsCell.rawValue, bundle: nil), forCellReuseIdentifier: Cell.news.rawValue)
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.tableFooterView = UIView()
-        
-        
-        
-        
-        //let footerView = UIView(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 50))
-        //footerView.addSubview(activityView)
-        //activityView.center = self.tableView.tableFooterView!.center
-        //self.view.addSubview(activityView)
-        
-        
-        
-        
         
         tableView.tableFooterView = activityView
-        
-        
-        
+                
         searchBar.delegate = self
         newsPresenter?.fetchNews(for: pageNumber)
         activityView.startAnimating()
@@ -86,18 +63,13 @@ class NewsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let cell = NewsCellRouter.createModule(tableView: tableView, indexPath: indexPath, article: filteredData[indexPath.row].object)
+        let cell = NewsCellRouter.createModule(tableView: tableView, indexPath: indexPath, article: filteredData[indexPath.row])
+        
         cell.delegate = self
-        cell.selectionStyle = .none
-        
         cell.descriptionLabel.delegate = self
+
+        cell.selectionStyle = .none
         cell.layoutIfNeeded()
-        
-        cell.descriptionLabel.shouldCollapse = true
-        //cell.descriptionLabel.textReplacementType = currentSource.textReplacementType
-        //cell.descriptionLabel.numberOfLines = 3
-        cell.descriptionLabel.collapsed = articles[indexPath.row].state
         
         return cell
     }
@@ -187,7 +159,9 @@ extension NewsViewController: PresenterToViewNewsProtocol {
     
     func onFetchNewsResponseSuccess(for news: [NewEntity]) {
         self.articles += news.map { Article(object: $0) }
+        self.articles.sort(by: {$0.object.publishedAt.toDate > $1.object.publishedAt.toDate })
         self.filteredData = self.articles
+        
         
         DispatchQueue.main.async { [weak self] in
             self?.activityView.stopAnimating()
@@ -228,45 +202,19 @@ extension NewsViewController: CellNavigationDelegate {
     
 }
 
+extension String {
+    var toDate: Date {
+        return Date.Formatter.customDate.date(from: self)!
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//{
-//    
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-//    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-//    let date = dateFormatter.date(from: "2017-01-09T11:00:00.000Z")
-//    print("date: \(date)")
-//}
-
-/*
- NEWS
- 
- GET https://newsapi.org/v2/top-headlines?country=us&apiKey=505ae8aa1212428492c5cc29dc25c669
- 
- 
- // Using any free News API (e.g. https://newsapi.org) create an app which can display and filter news for last 7 days.
- 
- 
- Requirements:
- 
- When application runs, user should see screen with news for last 24 hours only. When user reaches the end of current news list, then next news page for previous day should be downloaded and added to the bottom etc. till list contains 7-days news. In this case pagination should be disabled.
- 
- 
- Bonus points for:
- - a nice and interesting UI, animations;
- - using of data bases to store downloaded news.
- 
- */
+extension Date {
+    struct Formatter {
+        static let customDate: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            return formatter
+        }()
+    }
+}
